@@ -17,6 +17,7 @@ module router {
 
     var allRoutes = [
         { url: '',          params: { page: 'home-page' } },
+        { url: 'play',      params: { page: 'game-page' } },
         { url: 'about',     params: { page: 'about-page' } }
     ];
 

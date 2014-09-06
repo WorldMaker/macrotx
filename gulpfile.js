@@ -3,7 +3,8 @@ var fs = require('fs'), vm = require('vm'), merge = require('deeply'), chalk = r
 
 // Gulp and plugins
 var gulp = require('gulp'), rjs = require('gulp-requirejs-bundler'), concat = require('gulp-concat'), clean = require('gulp-clean'),
-    replace = require('gulp-replace'), uglify = require('gulp-uglify'), htmlreplace = require('gulp-html-replace'), typescript = require('gulp-tsc');
+    replace = require('gulp-replace'), uglify = require('gulp-uglify'), htmlreplace = require('gulp-html-replace'), typescript = require('gulp-tsc'),
+    watch = require('gulp-watch');
 
 // Config
 var requireJsRuntimeConfig = vm.runInNewContext(fs.readFileSync('src/app/require.config.js') + '; require;');
@@ -18,6 +19,7 @@ var requireJsRuntimeConfig = vm.runInNewContext(fs.readFileSync('src/app/require
             'requireLib',
             'components/nav-bar/nav-bar',
             'components/home-page/home',
+	    'components/game-page/game',
             'text!components/about-page/about.html'
         ],
         insertRequire: ['app/startup'],
@@ -83,4 +85,8 @@ gulp.task('clean', function() {
 gulp.task('default', ['html', 'js', 'css'], function(callback) {
     callback();
     console.log('\nPlaced optimized files in ' + chalk.magenta('dist/\n'));
+});
+
+gulp.task('watch', function () {
+    return watch(['**/*.ts', '**/*.html'], function () { gulp.start('js'); });
 });
