@@ -1,4 +1,4 @@
-<div class="col-md-10">
+<div class="col-md-10" data-bind="component: { name: game().node, params: { game: game } }">
 </div>
 
 <div class="col-md-2">
@@ -8,7 +8,9 @@
 <p>Please select a character race to get started.</p>
 <!-- /ko -->
 <!-- ko if: race -->
-<p>You are <span data-bind="text: race">...</span></p>
+<p>You are a <span data-bind="text: race">…</span>
+<span data-bind="text: className">…</span>
+</p>
 <!-- /ko -->
 </div>
 
