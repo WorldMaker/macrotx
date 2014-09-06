@@ -94,3 +94,7 @@ gulp.task('default', ['html', 'js', 'css'], function(callback) {
 gulp.task('watch', function () {
     return watch(['**/*.ts', '**/*.html'], function () { gulp.start('js'); });
 });
+
+gulp.task('watchts', function () {
+    return watch(['**/*.ts'], function () { gulp.start('ts'); });
+});

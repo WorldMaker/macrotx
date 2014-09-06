@@ -5,8 +5,11 @@ export var template: string = require("text!./game.html");
 export class Game {
 	node = ko.observable<string>('node!race');
 
+	a = ko.observable<string>('a');
+	gender = ko.observable<string>('');
 	race = ko.observable<string>();	
 	className = ko.observable<string>('');
+	pronoun = ko.observable<string>('');
 }
 
 export class viewModel {

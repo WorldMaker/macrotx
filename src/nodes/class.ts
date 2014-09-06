@@ -14,13 +14,16 @@ export class viewModel {
 
 	sjw() {
 		this.game().className('Social Justice Warrior');
+		this.game().node('node!gender');
 	}
 
 	enchanter() {
 		this.game().className('Enchanter');
+		this.game().node('node!gender');
 	}
 
 	chef() {
 		this.game().className('Chef');
+		this.game().node('node!gender');
 	}
 }
