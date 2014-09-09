@@ -23,8 +23,12 @@ var requireJsRuntimeConfig = vm.runInNewContext(fs.readFileSync('src/app/require
             'text!components/about-page/about.html',
 
 	    // ** TODO: Smarter node handling? **
+	    'nodes/boss',
 	    'nodes/class',
-	    'nodes/race'
+	    'nodes/gender',
+	    'nodes/pronoun',
+	    'nodes/race',
+	    'nodes/weapon'
         ],
         insertRequire: ['app/startup'],
         bundles: {
