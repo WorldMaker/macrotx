@@ -23,4 +23,8 @@ export class viewModel {
 	they() {
 		this.game().pronoun('they');
 	}
+
+	next() {
+		this.game().node('node!weapon');
+	}
 }

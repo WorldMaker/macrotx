@@ -10,6 +10,9 @@ export class Game {
 	race = ko.observable<string>();	
 	className = ko.observable<string>('');
 	pronoun = ko.observable<string>('');
+	honorific = ko.computed(() => this.pronoun() == 'she' ? 'Ms.' : 'Mr.');
+	playerName = ko.observable<string>('You');
+	weapon = ko.observable<string>();
 }
 
 export class viewModel {
