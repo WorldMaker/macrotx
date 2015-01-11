@@ -13,6 +13,12 @@ export class Game {
 	honorific = ko.computed(() => this.pronoun() == 'she' ? 'Ms.' : 'Mr.');
 	playerName = ko.observable<string>('You');
 	weapon = ko.observable<string>();
+
+	ap = ko.observable<number>(5);
+
+	constructor() {
+		this.node.subscribe(value => this.ap(this.ap() - 1));
+	}
 }
 
 export class viewModel {
