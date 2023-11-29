@@ -1,9 +1,13 @@
 import { Fragment, jsx, run } from 'butterfloat'
+import { Router } from './router'
+import { NavBar } from './components/nav-bar'
 
 function Main() {
+  const router = new Router()
+
   return (
     <>
-      <nav-bar params="route: route"></nav-bar>
+      <NavBar router={router} />
       <div
         id="page"
         className="container"

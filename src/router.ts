@@ -1,7 +1,8 @@
-import { Observable, fromEvent, map, shareReplay } from 'rxjs'
+import { Observable, concat, fromEvent, map, of, shareReplay, tap } from 'rxjs'
 
 const Routes: Record<string, string> = {
   '': 'home',
+  '#': 'home',
   '#play': 'game',
   '#about': 'about',
 }
@@ -13,9 +14,14 @@ export class Router {
   }
 
   constructor() {
-    const hashChange = fromEvent<HashChangeEvent>(window, 'hashchange')
-    this.#page = hashChange.pipe(
-      map((event) => Routes[event.newURL] ?? 'home'),
+    const hash = concat(
+      of(location.hash),
+      fromEvent<HashChangeEvent>(window, 'hashchange').pipe(
+        map(() => location.hash),
+      ),
+    )
+    this.#page = hash.pipe(
+      map((hash) => Routes[hash] ?? 'home'),
       shareReplay(1),
     )
   }
