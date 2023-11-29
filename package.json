@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "scripts": {
     "build": "node _build.js",
+    "start": "http-server dist",
     "typecheck": "tsc -p .",
     "prettier": "prettier --write .",
     "prettier:check": "prettier --check ."
