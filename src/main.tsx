@@ -1,5 +1,5 @@
 import { Fragment, jsx, run } from 'butterfloat'
-import { map, switchMap } from 'rxjs'
+import { map } from 'rxjs'
 import { NavBar } from './components/nav-bar'
 import { Router } from './router'
 

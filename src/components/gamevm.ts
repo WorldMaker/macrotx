@@ -1,11 +1,18 @@
-import { StateSetter, butterfly } from 'butterfloat'
-import { Observable, map } from 'rxjs'
+import { Component, StateSetter, butterfly } from 'butterfloat'
+import { Observable, map, shareReplay } from 'rxjs'
+
+const NodeComponents: Record<string, (vm: GameVm) => Component> = {}
 
 export class GameVm {
   readonly #node: Observable<string>
   readonly #setNode: (node: StateSetter<string>) => void
   get node() {
     return this.#node
+  }
+
+  readonly #nodeComponent: Observable<Component | null>
+  get nodeComponent() {
+    return this.#nodeComponent
   }
 
   readonly #a: Observable<string>
@@ -72,9 +79,33 @@ export class GameVm {
     ;[this.#weapon, this.#setWeapon] = butterfly('')
     ;[this.#ap, this.#setAp] = butterfly(5)
 
+    this.#nodeComponent = this.node.pipe(
+      map((node) => {
+        const component = NodeComponents[node]
+        if (component) {
+          return component(this)
+        } else {
+          return null
+        }
+      }),
+      shareReplay(1),
+    )
+
     this.#honorific = this.pronoun.pipe(
       map((pronoun) => (pronoun === 'she' ? 'Ms.' : 'Mr.')),
     )
+  }
+
+  restart() {
+    this.#setNode('race')
+    this.#setA('a')
+    this.#setGender('')
+    this.#setRace('')
+    this.#setClassName('')
+    this.#setPronoun('')
+    this.#setPlayerName('You')
+    this.#setWeapon('')
+    this.#setAp(5)
   }
 
   nextNode(node: string) {

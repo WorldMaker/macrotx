@@ -2,6 +2,7 @@ import { Component } from 'butterfloat'
 import { Observable, concat, fromEvent, map, of, shareReplay } from 'rxjs'
 import HomePage from './pages/home'
 import AboutPage from './pages/about'
+import GamePage from './pages/game'
 
 const Routes: Record<string, string> = {
   '': 'home',
@@ -13,6 +14,7 @@ const Routes: Record<string, string> = {
 const PageComponents: Record<string, Component> = {
   home: HomePage,
   about: AboutPage,
+  game: GamePage,
 }
 
 export class Router {
