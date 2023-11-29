@@ -3,6 +3,8 @@
   "name": "macrotx",
   "version": "0.0.0",
   "scripts": {
+    "build": "node _build.js",
+    "typecheck": "tsc -p .",
     "prettier": "prettier --write .",
     "prettier:check": "prettier --check ."
   },
