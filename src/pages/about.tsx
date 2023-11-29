@@ -1,8 +1,8 @@
-import { jsx } from 'butterfloat'
+import { Fragment, jsx } from 'butterfloat'
 
 export default function AboutPage() {
   return (
-    <div>
+    <>
       <h1>About</h1>
 
       <p>
@@ -18,6 +18,6 @@ export default function AboutPage() {
         <a href="https://github.com/WorldMaker/butterfloat">Butterfloat</a>{' '}
         components.
       </p>
-    </div>
+    </>
   )
 }

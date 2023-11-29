@@ -1,6 +1,7 @@
-import { ComponentContext, ObservableEvent, jsx } from 'butterfloat'
-import { GameProps, GameVm } from '../components/gamevm'
+import { ComponentContext, Fragment, ObservableEvent, jsx } from 'butterfloat'
 import { map } from 'rxjs'
+import { tag } from 'rxjs-spy/operators'
+import { GameProps, GameVm } from '../components/gamevm'
 
 function NodeNotFound() {
   return <p>Game node not found.</p>
@@ -22,7 +23,7 @@ function CharacterType({ game }: GameProps) {
 }
 
 function Empty() {
-  return <span></span>
+  return <></>
 }
 
 function Weapon({ game }: GameProps) {
@@ -47,6 +48,7 @@ export default function GamePage(
 
   const nodeComponent = game.nodeComponent.pipe(
     map((nodeComponent) => nodeComponent ?? NodeNotFound),
+    tag('game-node-component'),
   )
 
   const characterType = game.race.pipe(
@@ -68,7 +70,7 @@ export default function GamePage(
   })
 
   return (
-    <div>
+    <>
       <div
         className="col-md-10"
         childrenBind={nodeComponent}
@@ -106,6 +108,6 @@ export default function GamePage(
           <span className="fa fa-refresh"></span> Restart Game
         </button>
       </div>
-    </div>
+    </>
   )
 }

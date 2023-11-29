@@ -1,4 +1,4 @@
-import { ComponentContext, ObservableEvent, jsx } from 'butterfloat'
+import { Fragment, ComponentContext, ObservableEvent, jsx } from 'butterfloat'
 import { GameProps } from '../components/gamevm'
 
 interface RaceEvents {
@@ -27,7 +27,7 @@ export default function RaceNode(
   })
 
   return (
-    <div>
+    <>
       <h1>Choose Your Race</h1>
 
       <div className="list-group">
@@ -65,6 +65,6 @@ export default function RaceNode(
           </p>
         </a>
       </div>
-    </div>
+    </>
   )
 }
