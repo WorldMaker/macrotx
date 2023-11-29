@@ -1,3 +1,3 @@
-*Macro Transaction Force Go!*
+_Macro Transaction Force Go!_
 
 Play Online: http://worldmaker.github.io/macrotx/

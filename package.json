@@ -2,6 +2,10 @@
   "type": "module",
   "name": "macrotx",
   "version": "0.0.0",
+  "scripts": {
+    "prettier": "prettier --write .",
+    "prettier:check": "prettier --check ."
+  },
   "dependencies": {
     "prettier": "^3.1.0"
   }

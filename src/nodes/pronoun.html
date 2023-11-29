@@ -1,68 +1,84 @@
 <h1>Welcome to the Macro Transaction Force HQ!</h1>
 
-<p>The building secretary robot eyeballs you just enough to feel like
-it knows everything about you, audibly sighs, and then presses an intercom
-button on its button-covered chest, not even bothering to try to catch
-your name.</p>
+<p>
+  The building secretary robot eyeballs you just enough to feel like it knows
+  everything about you, audibly sighs, and then presses an intercom button on
+  its button-covered chest, not even bothering to try to catch your name.
+</p>
 
-<p>"Mr. Gravel?" the robot mechanically chirps to itself. You cannot
-hear the reply, only the robot continuing to itself, "You had an interview
-scheduled this space afternoon?" The robot nods in frustration, presumably
-while Mr. Gravel on the other end of the intercom remembers his agenda for
-the day. "Well, <em>she</em>'s here&hellip;" The tone of the robot's pronoun
-choice sounds rather condescending for a machine.</p>
+<p>
+  "Mr. Gravel?" the robot mechanically chirps to itself. You cannot hear the
+  reply, only the robot continuing to itself, "You had an interview scheduled
+  this space afternoon?" The robot nods in frustration, presumably while Mr.
+  Gravel on the other end of the intercom remembers his agenda for the day.
+  "Well, <em>she</em>'s here&hellip;" The tone of the robot's pronoun choice
+  sounds rather condescending for a machine.
+</p>
 
 <!-- ko if: !game().pronoun() -->
 <div class="list-group">
-<a class="list-group-item" href="#" data-bind="click: she">
-<h4 class="list-group-item-heading">"She" is fine</h4>
-<p class="list-group-item-text">Even if the tone was suspect, you are ok with "she".</p>
-</p>
-</a>
-<a class="list-group-item" href="#" data-bind="click: he">
-<h4 class="list-group-item-heading">"HE"</h4>
-<p class="list-group-item-text">You attempt to forcefully correct the robot.</p>
-</p>
-</a>
-<a class="list-group-item" href="#" data-bind="click: they">
-<h4 class="list-group-item-heading">"I'm sorry, but it is 'they'&hellip;"</h4>
-<p class="list-group-item-text">This robot is truly mistaken.</p>
-</p>
-</a>
-<div class="list-group-item disabled">
-<h4 class="list-group-item-heading">"Xie"</h4>
-<p class="list-group-item-text"><em>Module not found.</em></p>
-</div>
+  <a class="list-group-item" href="#" data-bind="click: she">
+    <h4 class="list-group-item-heading">"She" is fine</h4>
+    <p class="list-group-item-text">
+      Even if the tone was suspect, you are ok with "she".
+    </p>
+  </a>
+  <a class="list-group-item" href="#" data-bind="click: he">
+    <h4 class="list-group-item-heading">"HE"</h4>
+    <p class="list-group-item-text">
+      You attempt to forcefully correct the robot.
+    </p>
+  </a>
+  <a class="list-group-item" href="#" data-bind="click: they">
+    <h4 class="list-group-item-heading">
+      "I'm sorry, but it is 'they'&hellip;"
+    </h4>
+    <p class="list-group-item-text">This robot is truly mistaken.</p>
+  </a>
+  <div class="list-group-item disabled">
+    <h4 class="list-group-item-heading">"Xie"</h4>
+    <p class="list-group-item-text"><em>Module not found.</em></p>
+  </div>
 </div>
 <!-- /ko -->
 
 <!-- ko if: game().pronoun -->
 <hr />
 
-<p data-bind="visible: game().pronoun() == 'she'">You don't bother to correct
-the robot's pronoun usage, but you do give some wicked side-eye for its choice
-of tone.</p>
+<p data-bind="visible: game().pronoun() == 'she'">
+  You don't bother to correct the robot's pronoun usage, but you do give some
+  wicked side-eye for its choice of tone.
+</p>
 
-<p data-bind="visible: game().pronoun() == 'he'">"HE" you loudly point out to
-the robot. The robot huffs into its intercom, "<em>He</em> is here&hellip;".</p>
+<p data-bind="visible: game().pronoun() == 'he'">
+  "HE" you loudly point out to the robot. The robot huffs into its intercom,
+  "<em>He</em> is here&hellip;".
+</p>
 
-<p data-bind="visible: game().pronoun() == 'they'">"I'm sorry, but it is
-'they'&hellip;" you politely try to correct the robot. The robot glares at 
-you and snarks back to the intercom, "They <em>is</em> here&hellip;".</p>
+<p data-bind="visible: game().pronoun() == 'they'">
+  "I'm sorry, but it is 'they'&hellip;" you politely try to correct the robot.
+  The robot glares at you and snarks back to the intercom, "They
+  <em>is</em> here&hellip;".
+</p>
 
 <p>"Mr. Gravel will see you in a few moments," the robot comes back to you.</p>
 
 <div class="list-group">
-<div class="list-group-item disabled">
-<h4 class="list-group-item-heading">Shoot the Robot <span class="label label-info">Collector's Edition</span></h4>
-<p class="list-group-item-text">In addition to the robot's rudeness, you finally
-notice the robot wears the insignia of the Devices of Devastation, a galactic
-gang of murderous robots you've sworn to destroy on sight.</p>
-</div>
-<a class="list-group-item" href="#" data-bind="click: next">
-<h4 class="list-group-item-heading">Wait Patiently</h4>
-<p class="list-group-item-text">You can wait patiently for the interview.</p>
-</p>
-</a>
+  <div class="list-group-item disabled">
+    <h4 class="list-group-item-heading">
+      Shoot the Robot <span class="label label-info">Collector's Edition</span>
+    </h4>
+    <p class="list-group-item-text">
+      In addition to the robot's rudeness, you finally notice the robot wears
+      the insignia of the Devices of Devastation, a galactic gang of murderous
+      robots you've sworn to destroy on sight.
+    </p>
+  </div>
+  <a class="list-group-item" href="#" data-bind="click: next">
+    <h4 class="list-group-item-heading">Wait Patiently</h4>
+    <p class="list-group-item-text">
+      You can wait patiently for the interview.
+    </p>
+  </a>
 </div>
 <!-- /ko -->

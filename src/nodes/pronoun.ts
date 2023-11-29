@@ -1,30 +1,30 @@
 /// <amd-dependency path="text!./pronoun.html" />
-import ko = require('knockout');
-import game = require('../components/game-page/game');
-export var template: string = require("text!./pronoun.html");
+import ko = require('knockout')
+import game = require('../components/game-page/game')
+export var template: string = require('text!./pronoun.html')
 
 export class viewModel {
-	game = ko.observable<game.Game>();
+  game = ko.observable<game.Game>()
 
-	constructor(params) {
-		if (params && params.game) {
-			this.game = params.game;
-		}
-	}
+  constructor(params) {
+    if (params && params.game) {
+      this.game = params.game
+    }
+  }
 
-	she() {
-		this.game().pronoun('she');
-	}
+  she() {
+    this.game().pronoun('she')
+  }
 
-	he() {
-		this.game().pronoun('he');
-	}
+  he() {
+    this.game().pronoun('he')
+  }
 
-	they() {
-		this.game().pronoun('they');
-	}
+  they() {
+    this.game().pronoun('they')
+  }
 
-	next() {
-		this.game().node('node!weapon');
-	}
+  next() {
+    this.game().node('node!weapon')
+  }
 }

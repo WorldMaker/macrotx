@@ -1,25 +1,38 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>macrotx</title>
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link
+      href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"
+      rel="stylesheet"
+    />
     <!-- build:css -->
-      <link href="bower_modules/bootswatch-dist/css/bootstrap.min.css" rel="stylesheet">
-      <link href="css/styles.css" rel="stylesheet">
+    <link
+      href="bower_modules/bootswatch-dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link href="css/styles.css" rel="stylesheet" />
     <!-- endbuild -->
     <!-- build:js -->
-      <script src="app/require.config.js"></script>
-      <script data-main="app/startup" src="bower_modules/requirejs/require.js"></script>
+    <script src="app/require.config.js"></script>
+    <script
+      data-main="app/startup"
+      src="bower_modules/requirejs/require.js"
+    ></script>
     <!-- endbuild -->
   </head>
   <body>
     <nav-bar params="route: route"></nav-bar>
-    <div id="page" class="container" data-bind="component: { name: route().page, params: route }"></div>
-    <hr/>
+    <div
+      id="page"
+      class="container"
+      data-bind="component: { name: route().page, params: route }"
+    ></div>
+    <hr />
     <footer class="container">
-       <small>Copyright &copy; 2014 Max Battcher. Some rights reserved.</small>
+      <small>Copyright &copy; 2014 Max Battcher. Some rights reserved.</small>
     </footer>
   </body>
 </html>

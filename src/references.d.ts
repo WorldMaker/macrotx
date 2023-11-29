@@ -5,5 +5,5 @@
 /// <reference path="../definitions/bootstrap/bootstrap.d.ts" />
 /// <reference path="../definitions/crossroads/crossroads.d.ts" />
 /// <reference path="../definitions/hasher/hasher.d.ts" />
-declare var require;
-declare var define;
+declare var require
+declare var define
