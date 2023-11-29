@@ -11,16 +11,5 @@
     <link href="main.css" rel="stylesheet" />
     <script type="module" src="main.js"></script>
   </head>
-  <body>
-    <nav-bar params="route: route"></nav-bar>
-    <div
-      id="page"
-      class="container"
-      data-bind="component: { name: route().page, params: route }"
-    ></div>
-    <hr />
-    <footer class="container">
-      <small>Copyright &copy; 2014 Max Battcher. Some rights reserved.</small>
-    </footer>
-  </body>
+  <body id="container"></body>
 </html>
