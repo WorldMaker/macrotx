@@ -17,6 +17,7 @@ function Main() {
   return (
     <>
       <NavBar router={router} />
+      <br clear="both" />
       <div
         id="page"
         className="container"
