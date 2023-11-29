@@ -1,7 +1,10 @@
 import { Component, StateSetter, butterfly } from 'butterfloat'
 import { Observable, map, shareReplay } from 'rxjs'
+import { NodeComponents } from '../nodes'
 
-const NodeComponents: Record<string, (vm: GameVm) => Component> = {}
+export interface GameProps {
+  game: GameVm
+}
 
 export class GameVm {
   readonly #node: Observable<string>
@@ -111,5 +114,22 @@ export class GameVm {
   nextNode(node: string) {
     this.#setNode(node)
     this.#setAp((ap) => ap - 1)
+  }
+
+  // *** Races ***
+
+  rabbit() {
+    this.#setRace('Gamma Rabbit')
+    this.#setNode('class')
+  }
+
+  seductrix() {
+    this.#setRace('Seductrix')
+    this.#setNode('class')
+  }
+
+  darkstar() {
+    this.#setRace('Darkstar Orc')
+    this.#setNode('node!class')
   }
 }

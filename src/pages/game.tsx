@@ -1,5 +1,5 @@
 import { ComponentContext, ObservableEvent, jsx } from 'butterfloat'
-import { GameVm } from '../components/gamevm'
+import { GameProps, GameVm } from '../components/gamevm'
 import { map } from 'rxjs'
 
 function NodeNotFound() {
@@ -8,10 +8,6 @@ function NodeNotFound() {
 
 function GetStarted() {
   return <p>Please select a character race to get started.</p>
-}
-
-interface GameProps {
-  game: GameVm
 }
 
 function CharacterType({ game }: GameProps) {
