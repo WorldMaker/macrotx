@@ -1,4 +1,7 @@
-import { Observable, concat, fromEvent, map, of, shareReplay, tap } from 'rxjs'
+import { Component } from 'butterfloat'
+import { Observable, concat, fromEvent, map, of, shareReplay } from 'rxjs'
+import HomePage from './pages/home'
+import AboutPage from './pages/about'
 
 const Routes: Record<string, string> = {
   '': 'home',
@@ -7,10 +10,20 @@ const Routes: Record<string, string> = {
   '#about': 'about',
 }
 
+const PageComponents: Record<string, Component> = {
+  home: HomePage,
+  about: AboutPage,
+}
+
 export class Router {
   readonly #page: Observable<string>
   get page() {
     return this.#page
+  }
+
+  readonly #component: Observable<Component | undefined>
+  get component() {
+    return this.#component
   }
 
   constructor() {
@@ -23,6 +36,9 @@ export class Router {
     this.#page = hash.pipe(
       map((hash) => Routes[hash] ?? 'home'),
       shareReplay(1),
+    )
+    this.#component = this.page.pipe(
+      map((pageName) => PageComponents[pageName]),
     )
   }
 }

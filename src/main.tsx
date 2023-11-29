@@ -1,9 +1,18 @@
 import { Fragment, jsx, run } from 'butterfloat'
-import { Router } from './router'
+import { map, switchMap } from 'rxjs'
 import { NavBar } from './components/nav-bar'
+import { Router } from './router'
+
+function PageNotFound() {
+  return <p>Page not found</p>
+}
 
 function Main() {
   const router = new Router()
+
+  const pageComponent = router.component.pipe(
+    map((component) => component ?? PageNotFound),
+  )
 
   return (
     <>
@@ -11,7 +20,8 @@ function Main() {
       <div
         id="page"
         className="container"
-        data-bind="component: { name: route().page, params: route }"
+        childrenBind={pageComponent}
+        childrenBindMode="replace"
       ></div>
       <hr />
       <footer className="container">
