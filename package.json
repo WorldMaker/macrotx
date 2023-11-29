@@ -6,7 +6,7 @@
     "prettier": "prettier --write .",
     "prettier:check": "prettier --check ."
   },
-  "dependencies": {
+  "devDependencies": {
     "prettier": "^3.1.0"
   }
 }
