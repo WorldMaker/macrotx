@@ -12,6 +12,14 @@ export default function HomePage() {
         it must be worth it.
       </p>
 
+      <p>
+        <em>
+          <strong>NOTE:</strong> This is a work of satire from 2014. Some of the
+          jokes may not have aged well, as satire is hard on the modern
+          internet. Unfortunately, some of the jokes seem to be timeless.
+        </em>
+      </p>
+
       <a className="btn btn-primary" href="#play">
         Play the Game
       </a>

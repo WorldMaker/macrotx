@@ -3005,7 +3005,7 @@ function NavBar({ router }) {
 
 // src/pages/home.tsx
 function HomePage() {
-  return /* @__PURE__ */ jsx("div", { className: "jumbotron" }, /* @__PURE__ */ jsx("h1", null, "Macro Transaction Force Go!"), /* @__PURE__ */ jsx("p", null, "For as long as you can remember you've wanted to be a member of the universe-renowned Macro Transaction Force, one of the most elite forces in the galaxy. Their barrier to entry is rather high, but everyone knows it must be worth it."), /* @__PURE__ */ jsx("a", { className: "btn btn-primary", href: "#play" }, "Play the Game"));
+  return /* @__PURE__ */ jsx("div", { className: "jumbotron" }, /* @__PURE__ */ jsx("h1", null, "Macro Transaction Force Go!"), /* @__PURE__ */ jsx("p", null, "For as long as you can remember you've wanted to be a member of the universe-renowned Macro Transaction Force, one of the most elite forces in the galaxy. Their barrier to entry is rather high, but everyone knows it must be worth it."), /* @__PURE__ */ jsx("p", null, /* @__PURE__ */ jsx("em", null, /* @__PURE__ */ jsx("strong", null, "NOTE:"), " This is a work of satire from 2014. Some of the jokes may not have aged well, as satire is hard on the modern internet. Unfortunately, some of the jokes seem to be timeless.")), /* @__PURE__ */ jsx("a", { className: "btn btn-primary", href: "#play" }, "Play the Game"));
 }
 
 // src/pages/about.tsx
