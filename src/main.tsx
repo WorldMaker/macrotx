@@ -1,10 +1,11 @@
 import { Fragment, jsx, run } from 'butterfloat'
 import { map } from 'rxjs'
-import { create } from 'rxjs-spy'
+// import { create } from 'rxjs-spy'
 import { NavBar } from './nav-bar'
 import { Router } from './router'
 
-create()
+// Uncomment in debug builds for logging tools
+// create()
 
 function PageNotFound() {
   return <p>Page not found</p>
