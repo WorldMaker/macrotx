@@ -1,20 +1,24 @@
 {
+  "type": "module",
   "name": "macrotx",
   "version": "0.0.0",
+  "scripts": {
+    "build": "node _build.js",
+    "start": "http-server dist",
+    "typecheck": "tsc -p .",
+    "prettier": "prettier --write .",
+    "prettier:check": "prettier --check ."
+  },
   "devDependencies": {
-    "gulp": "~3.6.2",
-    "gulp-requirejs-bundler": "^0.1.1",
-    "gulp-concat": "~2.2.0",
-    "gulp-clean": "~0.2.4",
-    "event-stream": "~3.1.0",
-    "gulp-replace": "~0.2.0",
-    "gulp-uglify": "~0.2.1",
-    "gulp-html-replace": "~1.0.0",
-
-    "gulp-tsc": "^0.7.0",
-
-
-    "deeply": "~0.1.0",
-    "chalk": "~0.4.0"
+    "esbuild": "^0.19.8",
+    "http-server": "^14.1.1",
+    "prettier": "^3.1.0",
+    "typescript": "^5.3.2"
+  },
+  "dependencies": {
+    "bootswatch": "3.2",
+    "butterfloat": "^0.5.6",
+    "rxjs": "^7.8.1",
+    "rxjs-spy": "^8.0.2"
   }
 }
