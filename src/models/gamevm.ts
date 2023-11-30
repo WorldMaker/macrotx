@@ -5,6 +5,7 @@ import { RaceVm } from './racevm'
 import { ClassVm } from './classvm'
 import { GenderVm } from './gendervm'
 import { PronounVm } from './pronounvm'
+import { WeaponVm } from './weaponvm'
 
 export interface GameProps {
   game: GameVm
@@ -62,16 +63,15 @@ export class GameVm {
     return this.#honorific
   }
 
-  readonly #playerName: Observable<string>
-  readonly #setPlayerName: (playerName: StateSetter<string>) => void
-  get playerName() {
-    return this.#playerName
+  readonly #weaponVm: WeaponVm
+  get weaponVm() {
+    return this.#weaponVm
   }
-
-  readonly #weapon: Observable<string>
-  readonly #setWeapon: (weapon: StateSetter<string>) => void
+  get playerName() {
+    return this.weaponVm.playerName
+  }
   get weapon() {
-    return this.#weapon
+    return this.weaponVm.weapon
   }
 
   readonly #ap: Observable<number>
@@ -82,14 +82,13 @@ export class GameVm {
 
   constructor() {
     ;[this.#node, this.#setNode] = butterfly('race')
-    ;[this.#playerName, this.#setPlayerName] = butterfly('You')
-    ;[this.#weapon, this.#setWeapon] = butterfly('')
     ;[this.#ap, this.#setAp] = butterfly(5)
 
     this.#genderVm = new GenderVm(this)
     this.#raceVm = new RaceVm(this)
     this.#classVm = new ClassVm(this)
     this.#pronounVm = new PronounVm(this)
+    this.#weaponVm = new WeaponVm(this)
 
     this.#nodeComponent = this.node.pipe(
       map((node) => {
@@ -110,12 +109,11 @@ export class GameVm {
 
   restart() {
     this.#setNode('race')
-    this.#genderVm.restart()
-    this.#raceVm.restart()
-    this.#classVm.restart()
-    this.#pronounVm.restart()
-    this.#setPlayerName('You')
-    this.#setWeapon('')
+    this.genderVm.restart()
+    this.raceVm.restart()
+    this.classVm.restart()
+    this.pronounVm.restart()
+    this.weaponVm.restart()
     this.#setAp(5)
   }
 
