@@ -1,6 +1,8 @@
 import { Component, StateSetter, butterfly } from 'butterfloat'
 import { Observable, map, shareReplay } from 'rxjs'
 import { NodeComponents } from '../nodes'
+import { RaceVm } from './racevm'
+import { ClassVm } from './classvm'
 
 export interface GameProps {
   game: GameVm
@@ -30,16 +32,20 @@ export class GameVm {
     return this.#gender
   }
 
-  readonly #race: Observable<string>
-  readonly #setRace: (race: StateSetter<string>) => void
+  readonly #raceVm: RaceVm
+  get raceVm() {
+    return this.#raceVm
+  }
   get race() {
-    return this.#race
+    return this.raceVm.race
   }
 
-  readonly #className: Observable<string>
-  readonly #setClassName: (className: StateSetter<string>) => void
+  readonly #classVm: ClassVm
+  get classVm() {
+    return this.#classVm
+  }
   get className() {
-    return this.#className
+    return this.classVm.className
   }
 
   readonly #pronoun: Observable<string>
@@ -75,12 +81,13 @@ export class GameVm {
     ;[this.#node, this.#setNode] = butterfly('race')
     ;[this.#a, this.#setA] = butterfly('a')
     ;[this.#gender, this.#setGender] = butterfly('')
-    ;[this.#race, this.#setRace] = butterfly('')
-    ;[this.#className, this.#setClassName] = butterfly('')
     ;[this.#pronoun, this.#setPronoun] = butterfly('')
     ;[this.#playerName, this.#setPlayerName] = butterfly('You')
     ;[this.#weapon, this.#setWeapon] = butterfly('')
     ;[this.#ap, this.#setAp] = butterfly(5)
+
+    this.#raceVm = new RaceVm(this)
+    this.#classVm = new ClassVm(this)
 
     this.#nodeComponent = this.node.pipe(
       map((node) => {
@@ -103,8 +110,8 @@ export class GameVm {
     this.#setNode('race')
     this.#setA('a')
     this.#setGender('')
-    this.#setRace('')
-    this.#setClassName('')
+    this.#raceVm.restart()
+    this.#classVm.restart()
     this.#setPronoun('')
     this.#setPlayerName('You')
     this.#setWeapon('')
@@ -114,22 +121,5 @@ export class GameVm {
   nextNode(node: string) {
     this.#setNode(node)
     this.#setAp((ap) => ap - 1)
-  }
-
-  // *** Races ***
-
-  rabbit() {
-    this.#setRace('Gamma Rabbit')
-    this.#setNode('class')
-  }
-
-  seductrix() {
-    this.#setRace('Seductrix')
-    this.#setNode('class')
-  }
-
-  darkstar() {
-    this.#setRace('Darkstar Orc')
-    this.#setNode('node!class')
   }
 }

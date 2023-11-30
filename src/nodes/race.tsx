@@ -1,5 +1,5 @@
 import { Fragment, ComponentContext, ObservableEvent, jsx } from 'butterfloat'
-import { GameProps } from '../components/gamevm'
+import { GameProps } from '../models/gamevm'
 
 interface RaceEvents {
   darkstar: ObservableEvent<MouseEvent>
@@ -12,18 +12,19 @@ export default function RaceNode(
   { bindImmediateEffect, events }: ComponentContext<RaceEvents>,
 ) {
   const { darkstar, rabbit, seductrix } = events
+  const { raceVm } = game
 
   bindImmediateEffect(darkstar, (e) => {
     e.preventDefault()
-    game.darkstar()
+    raceVm.darkstar()
   })
   bindImmediateEffect(rabbit, (e) => {
     e.preventDefault()
-    game.rabbit()
+    raceVm.rabbit()
   })
   bindImmediateEffect(seductrix, (e) => {
     e.preventDefault()
-    game.seductrix()
+    raceVm.seductrix()
   })
 
   return (

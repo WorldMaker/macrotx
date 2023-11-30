@@ -1,6 +1,6 @@
 import { jsx } from 'butterfloat'
 import { map } from 'rxjs'
-import { Router } from '../router'
+import { Router } from './router'
 
 interface NavBarProps {
   router: Router

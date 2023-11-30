@@ -1,7 +1,7 @@
 import { Fragment, jsx, run } from 'butterfloat'
 import { map } from 'rxjs'
 import { create } from 'rxjs-spy'
-import { NavBar } from './components/nav-bar'
+import { NavBar } from './nav-bar'
 import { Router } from './router'
 
 create()

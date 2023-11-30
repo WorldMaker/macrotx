@@ -1,7 +1,7 @@
 import { ComponentContext, Fragment, ObservableEvent, jsx } from 'butterfloat'
 import { map } from 'rxjs'
 import { tag } from 'rxjs-spy/operators'
-import { GameProps, GameVm } from '../components/gamevm'
+import { GameProps, GameVm } from '../models/gamevm'
 
 function NodeNotFound() {
   return <p>Game node not found.</p>

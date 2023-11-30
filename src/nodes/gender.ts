@@ -1,6 +1,6 @@
 /// <amd-dependency path="text!./gender.html" />
 import ko = require('knockout')
-import game = require('../components/gamevm')
+import game = require('../models/gamevm')
 export var template: string = require('text!./gender.html')
 
 export class viewModel {
