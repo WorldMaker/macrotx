@@ -17,7 +17,7 @@ function CharacterType({ game }: GameProps) {
       You are <span bind={{ innerText: game.a }}></span>{' '}
       <span bind={{ innerText: game.gender }}></span>{' '}
       <span bind={{ innerText: game.race }}></span>{' '}
-      <span bind={{ innerText: game.className }}></span> .
+      <span bind={{ innerText: game.className }}></span>.
     </p>
   )
 }

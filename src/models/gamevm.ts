@@ -3,6 +3,7 @@ import { Observable, map, shareReplay } from 'rxjs'
 import { NodeComponents } from '../nodes'
 import { RaceVm } from './racevm'
 import { ClassVm } from './classvm'
+import { GenderVm } from './gendervm'
 
 export interface GameProps {
   game: GameVm
@@ -20,16 +21,15 @@ export class GameVm {
     return this.#nodeComponent
   }
 
-  readonly #a: Observable<string>
-  readonly #setA: (a: StateSetter<string>) => void
-  get a() {
-    return this.#a
+  readonly #genderVm: GenderVm
+  get genderVm() {
+    return this.#genderVm
   }
-
-  readonly #gender: Observable<string>
-  readonly #setGender: (gender: StateSetter<string>) => void
+  get a() {
+    return this.#genderVm.a
+  }
   get gender() {
-    return this.#gender
+    return this.#genderVm.gender
   }
 
   readonly #raceVm: RaceVm
@@ -79,13 +79,12 @@ export class GameVm {
 
   constructor() {
     ;[this.#node, this.#setNode] = butterfly('race')
-    ;[this.#a, this.#setA] = butterfly('a')
-    ;[this.#gender, this.#setGender] = butterfly('')
     ;[this.#pronoun, this.#setPronoun] = butterfly('')
     ;[this.#playerName, this.#setPlayerName] = butterfly('You')
     ;[this.#weapon, this.#setWeapon] = butterfly('')
     ;[this.#ap, this.#setAp] = butterfly(5)
 
+    this.#genderVm = new GenderVm(this)
     this.#raceVm = new RaceVm(this)
     this.#classVm = new ClassVm(this)
 
@@ -108,8 +107,7 @@ export class GameVm {
 
   restart() {
     this.#setNode('race')
-    this.#setA('a')
-    this.#setGender('')
+    this.#genderVm.restart()
     this.#raceVm.restart()
     this.#classVm.restart()
     this.#setPronoun('')
