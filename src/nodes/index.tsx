@@ -5,8 +5,10 @@ import ClassNode from './class'
 import GenderNode from './gender'
 import PronounNode from './pronoun'
 import WeaponNode from './weapon'
+import BossNode from './boss'
 
 export const NodeComponents: Record<string, (vm: GameVm) => Component> = {
+  boss: (game) => () => <BossNode game={game} />,
   class: (game) => () => <ClassNode game={game} />,
   gender: (game) => () => <GenderNode game={game} />,
   pronoun: (game) => () => <PronounNode game={game} />,
