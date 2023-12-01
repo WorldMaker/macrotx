@@ -7,12 +7,12 @@ interface NavBarProps {
 }
 
 export function NavBar({ router }: NavBarProps) {
-  const homeClassName = router.page.pipe(
-    map((page) => (page === 'home' ? 'active' : '')),
+  const homeActive = router.page.pipe(
+    map((page) => (page === 'home' ? true : false)),
   )
 
-  const aboutClassName = router.page.pipe(
-    map((page) => (page === 'about' ? 'active' : '')),
+  const aboutActive = router.page.pipe(
+    map((page) => (page === 'about' ? true : false)),
   )
 
   return (
@@ -36,11 +36,11 @@ export function NavBar({ router }: NavBarProps) {
         </div>
         <div className="collapse navbar-collapse">
           <ul className="nav navbar-nav">
-            <li bind={{ className: homeClassName }}>
+            <li classBind={{ active: homeActive }}>
               <a href="#">Home</a>
             </li>
 
-            <li bind={{ className: aboutClassName }}>
+            <li classBind={{ active: aboutActive }}>
               <a href="#about">About</a>
             </li>
           </ul>

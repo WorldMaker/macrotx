@@ -79,12 +79,7 @@ function TeaChoice(
           at least two more times.
         </p>
       </div>
-      <a
-        className="list-group-item"
-        href="#"
-        data-bind="click: nextTea"
-        events={{ click: nextTea }}
-      >
+      <a className="list-group-item" href="#" events={{ click: nextTea }}>
         <h4 className="list-group-item-heading">Invite to Tea</h4>
         <p className="list-group-item-text">
           It may not be your office, but there's no reason to be uncivil even to

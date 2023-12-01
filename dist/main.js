@@ -2485,7 +2485,7 @@ function makeEventProxy(componentName, baseEvents = {}) {
 
 // node_modules/butterfloat/component.js
 function hasAnyBinds(description) {
-  return description.childrenBind || Object.keys(description.bind).length > 0 || Object.keys(description.immediateBind).length > 0 || Object.keys(description.events).length > 0;
+  return description.childrenBind || Object.keys(description.bind).length > 0 || Object.keys(description.immediateBind).length > 0 || Object.keys(description.events).length > 0 || Object.keys(description.styleBind).length > 0 || Object.keys(description.immediateStyleBind).length > 0 || Object.keys(description.classBind).length > 0 || Object.keys(description.immediateClassBind).length > 0;
 }
 
 // node_modules/butterfloat/butterfly.js
@@ -2526,7 +2526,7 @@ function Fragment(attributes, ...children) {
 }
 function jsx(element, attributes, ...children) {
   if (typeof element === "string") {
-    const { bind: bind2, immediateBind, childrenBind, childrenBindMode, events, ...otherAttributes } = attributes ?? {};
+    const { bind: bind2, immediateBind, childrenBind, childrenBindMode, events, styleBind, immediateStyleBind, classBind, immediateClassBind, ...otherAttributes } = attributes ?? {};
     return {
       type: "element",
       element,
@@ -2536,7 +2536,11 @@ function jsx(element, attributes, ...children) {
       children,
       childrenBind,
       childrenBindMode,
-      events: events ?? {}
+      events: events ?? {},
+      styleBind: styleBind ?? {},
+      immediateStyleBind: immediateStyleBind ?? {},
+      classBind: classBind ?? {},
+      immediateClassBind: immediateClassBind ?? {}
     };
   }
   if (typeof element === "function") {
@@ -2595,6 +2599,48 @@ function bindObjectChanges(item, observable2, error, complete) {
     }
   });
 }
+function bindClassListKey(item, key, observable2, error, complete) {
+  return observable2.subscribe({
+    next: (value) => {
+      if (value) {
+        item.classList.add(key);
+      } else {
+        item.classList.remove(key);
+      }
+    },
+    error,
+    complete: () => {
+      console.debug(`${key.toString()} classList binding completed`, item);
+      complete();
+    }
+  });
+}
+function bindClassListChanges(item, observable2, error, complete) {
+  return observable2.subscribe({
+    next: (changes) => {
+      const adds = [];
+      const removes = [];
+      for (const [key, add] of Object.entries(changes)) {
+        if (add) {
+          adds.push(key);
+        } else {
+          removes.push(key);
+        }
+      }
+      if (adds.length > 0) {
+        item.classList.add(...adds);
+      }
+      if (removes.length > 0) {
+        item.classList.remove(...removes);
+      }
+    },
+    error,
+    complete: () => {
+      console.debug(`classList changes binding completed`, item);
+      complete();
+    }
+  });
+}
 function bufferEntries(observable2, suspense) {
   if (suspense) {
     return combineLatest([suspense, observable2]).pipe(bufferTime(0, animationFrameScheduler), map((states) => states.reduce((acc, [suspend, entry]) => ({
@@ -2613,8 +2659,7 @@ function schedulable(key, immediate) {
 function makeEntries(key, observable2) {
   return observable2.pipe(map((value) => [key, value]));
 }
-function bindElement(element, description, context2, document2 = globalThis.document) {
-  const { complete, componentRunner, componentWirer, error, eventBinder, suspense, subscription } = context2;
+function bindElementBinds(element, description, { complete, error, suspense, subscription }) {
   const schedulables = [];
   const binds = [
     ...Object.entries(description.bind).map(([key, observable2]) => [key, observable2, false]),
@@ -2631,9 +2676,14 @@ function bindElement(element, description, context2, document2 = globalThis.docu
     const scheduled2 = schedulables.map(([key, observable2]) => makeEntries(key, observable2));
     subscription.add(bindObjectChanges(element, bufferEntries(merge(...scheduled2), suspense), error, complete));
   }
+}
+function bindElementEvents(element, description, { eventBinder, subscription }) {
   for (const [key, event] of Object.entries(description.events)) {
     subscription.add(eventBinder.applyEvent(event, element, key));
   }
+}
+function bindElementChildren(element, description, context2, document2 = globalThis.document) {
+  const { complete, componentRunner, componentWirer, error, subscription } = context2;
   if (description.childrenBind) {
     if (description.childrenBindMode === "replace") {
       const placeholder = document2.createComment(`replaceable child component`);
@@ -2661,6 +2711,38 @@ function bindElement(element, description, context2, document2 = globalThis.docu
       }));
     }
   }
+}
+function bindElementClasses(element, description, { complete, error, subscription, suspense }) {
+  if (Object.keys(description.classBind).length > 0) {
+    const entries = [];
+    for (const [key, observable2] of Object.entries(description.classBind)) {
+      entries.push(makeEntries(key, observable2));
+    }
+    subscription.add(bindClassListChanges(element, bufferEntries(merge(...entries), suspense), error, complete));
+  }
+  for (const [key, observable2] of Object.entries(description.immediateClassBind)) {
+    subscription.add(bindClassListKey(element, key, observable2, error, complete));
+  }
+}
+function bindElementStyles(element, description, { complete, error, subscription, suspense }) {
+  if (Object.keys(description.classBind).length > 0) {
+    const entries = [];
+    for (const [key, observable2] of Object.entries(description.classBind)) {
+      entries.push(makeEntries(key, observable2));
+    }
+    subscription.add(bindObjectChanges(element.style, bufferEntries(merge(...entries), suspense), error, complete));
+  }
+  for (const [key, observable2] of Object.entries(description.immediateClassBind)) {
+    subscription.add(bindObjectKey(element.style, key, observable2, error, complete));
+  }
+}
+function bindElement(element, description, context2, document2 = globalThis.document) {
+  const { subscription } = context2;
+  bindElementBinds(element, description, context2);
+  bindElementEvents(element, description, context2);
+  bindElementChildren(element, description, context2, document2);
+  bindElementClasses(element, description, context2);
+  bindElementStyles(element, description, context2);
   return subscription;
 }
 function bindFragmentChildren(nodeDescription, node, subscription, context2, document2 = globalThis.document) {
@@ -2707,8 +2789,17 @@ function bindFragmentChildren(nodeDescription, node, subscription, context2, doc
 function buildElement(description, document2 = globalThis.document) {
   const element = document2.createElement(description.element);
   for (const [key, value] of Object.entries(description.attributes)) {
-    ;
-    element[key] = value;
+    if (key.startsWith("data-")) {
+      element.dataset[key.replace(/^data-/, "")] = value;
+    } else if (key === "class") {
+      element.className = value;
+    } else if (key === "for") {
+      ;
+      element.htmlFor = value;
+    } else {
+      ;
+      element[key] = value;
+    }
   }
   return element;
 }
@@ -2982,11 +3073,11 @@ function run(container2, component, options, placeholder, document2 = globalThis
 
 // src/nav-bar.tsx
 function NavBar({ router }) {
-  const homeClassName = router.page.pipe(
-    map((page) => page === "home" ? "active" : "")
+  const homeActive = router.page.pipe(
+    map((page) => page === "home" ? true : false)
   );
-  const aboutClassName = router.page.pipe(
-    map((page) => page === "about" ? "active" : "")
+  const aboutActive = router.page.pipe(
+    map((page) => page === "about" ? true : false)
   );
   return /* @__PURE__ */ jsx("div", { className: "navbar navbar-inverse navbar-fixed-top", role: "navigation" }, /* @__PURE__ */ jsx("div", { className: "container" }, /* @__PURE__ */ jsx("div", { className: "navbar-header" }, /* @__PURE__ */ jsx(
     "button",
@@ -3000,7 +3091,7 @@ function NavBar({ router }) {
     /* @__PURE__ */ jsx("span", { className: "icon-bar" }),
     /* @__PURE__ */ jsx("span", { className: "icon-bar" }),
     /* @__PURE__ */ jsx("span", { className: "icon-bar" })
-  ), /* @__PURE__ */ jsx("a", { className: "navbar-brand", href: "#" }, "macrotx")), /* @__PURE__ */ jsx("div", { className: "collapse navbar-collapse" }, /* @__PURE__ */ jsx("ul", { className: "nav navbar-nav" }, /* @__PURE__ */ jsx("li", { bind: { className: homeClassName } }, /* @__PURE__ */ jsx("a", { href: "#" }, "Home")), /* @__PURE__ */ jsx("li", { bind: { className: aboutClassName } }, /* @__PURE__ */ jsx("a", { href: "#about" }, "About"))))));
+  ), /* @__PURE__ */ jsx("a", { className: "navbar-brand", href: "#" }, "macrotx")), /* @__PURE__ */ jsx("div", { className: "collapse navbar-collapse" }, /* @__PURE__ */ jsx("ul", { className: "nav navbar-nav" }, /* @__PURE__ */ jsx("li", { classBind: { active: homeActive } }, /* @__PURE__ */ jsx("a", { href: "#" }, "Home")), /* @__PURE__ */ jsx("li", { classBind: { active: aboutActive } }, /* @__PURE__ */ jsx("a", { href: "#about" }, "About"))))));
 }
 
 // src/pages/home.tsx
@@ -3302,17 +3393,7 @@ function TeaChoice({ bossVm }, { bindImmediateEffect, events }) {
     e.preventDefault();
     bossVm.nextTea();
   });
-  return /* @__PURE__ */ jsx("div", { className: "list-group" }, /* @__PURE__ */ jsx("div", { className: "list-group-item disabled" }, /* @__PURE__ */ jsx("h4", { className: "list-group-item-heading" }, "Fight!", " ", /* @__PURE__ */ jsx("span", { className: "label label-primary" }, "6000 ", /* @__PURE__ */ jsx("span", { className: "fa fa-btc" }))), /* @__PURE__ */ jsx("p", { className: "list-group-item-text" }, "This would clearly be an amazing boss battle full of trying to find a weak point, exploiting said weak point, and then repeating those steps at least two more times.")), /* @__PURE__ */ jsx(
-    "a",
-    {
-      className: "list-group-item",
-      href: "#",
-      "data-bind": "click: nextTea",
-      events: { click: nextTea }
-    },
-    /* @__PURE__ */ jsx("h4", { className: "list-group-item-heading" }, "Invite to Tea"),
-    /* @__PURE__ */ jsx("p", { className: "list-group-item-text" }, "It may not be your office, but there's no reason to be uncivil even to an uninvited guest.")
-  ));
+  return /* @__PURE__ */ jsx("div", { className: "list-group" }, /* @__PURE__ */ jsx("div", { className: "list-group-item disabled" }, /* @__PURE__ */ jsx("h4", { className: "list-group-item-heading" }, "Fight!", " ", /* @__PURE__ */ jsx("span", { className: "label label-primary" }, "6000 ", /* @__PURE__ */ jsx("span", { className: "fa fa-btc" }))), /* @__PURE__ */ jsx("p", { className: "list-group-item-text" }, "This would clearly be an amazing boss battle full of trying to find a weak point, exploiting said weak point, and then repeating those steps at least two more times.")), /* @__PURE__ */ jsx("a", { className: "list-group-item", href: "#", events: { click: nextTea } }, /* @__PURE__ */ jsx("h4", { className: "list-group-item-heading" }, "Invite to Tea"), /* @__PURE__ */ jsx("p", { className: "list-group-item-text" }, "It may not be your office, but there's no reason to be uncivil even to an uninvited guest.")));
 }
 function Empty2() {
   return /* @__PURE__ */ jsx(Fragment, null);
@@ -3338,7 +3419,8 @@ function AfterTea({ game }) {
     ),
     map(
       (time) => new Date(time).toLocaleTimeString(void 0, {
-        hour12: false
+        hour12: false,
+        timeZone: "UTC"
       })
     ),
     map((formatted) => `AP ${formatted}`)
