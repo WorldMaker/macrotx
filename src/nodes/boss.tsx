@@ -122,6 +122,7 @@ function AfterTea({ game }: GameProps) {
     map((time) =>
       new Date(time).toLocaleTimeString(undefined, {
         hour12: false,
+        timeZone: 'UTC',
       }),
     ),
     map((formatted) => `AP ${formatted}`),
