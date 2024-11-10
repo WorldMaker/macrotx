@@ -3,15 +3,15 @@ import { map } from 'rxjs'
 import { tag } from 'rxjs-spy/operators'
 import { GameProps, GameVm } from '../models/gamevm'
 
-function NodeNotFound() {
+export function NodeNotFound() {
   return <p>Game node not found.</p>
 }
 
-function GetStarted() {
+export function GetStarted() {
   return <p>Please select a character race to get started.</p>
 }
 
-function CharacterType({ game }: GameProps) {
+export function CharacterType({ game }: GameProps) {
   return (
     <p>
       You are <span bind={{ innerText: game.a }}></span>{' '}
@@ -22,11 +22,11 @@ function CharacterType({ game }: GameProps) {
   )
 }
 
-function Empty() {
+export function Empty() {
   return <></>
 }
 
-function Weapon({ game }: GameProps) {
+export function Weapon({ game }: GameProps) {
   return (
     <p>
       You are wielding your <span bind={{ innerText: game.weapon }}></span>.
