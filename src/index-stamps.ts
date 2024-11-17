@@ -19,47 +19,47 @@ stamps
   .registerPrestamp(Main, container)
   .registerOnlyStamp(
     PageNotFound,
-    container.querySelector('#page-not-found') as HTMLTemplateElement,
+    container.querySelector<HTMLTemplateElement>('#page-not-found')!,
   )
   .registerOnlyStamp(
     NavBar,
-    container.querySelector('#navbar') as HTMLTemplateElement,
+    container.querySelector<HTMLTemplateElement>('#navbar')!,
   )
   .registerOnlyStamp(
     HomePage,
-    container.querySelector('#home-page') as HTMLTemplateElement,
+    container.querySelector<HTMLTemplateElement>('#home-page')!,
   )
   .registerOnlyStamp(
     AboutPage,
-    container.querySelector('#about-page') as HTMLTemplateElement,
+    container.querySelector<HTMLTemplateElement>('#about-page')!,
   )
   .registerOnlyStamp(
     GamePage,
-    container.querySelector('#game-page') as HTMLTemplateElement,
+    container.querySelector<HTMLTemplateElement>('#game-page')!,
   )
   .registerOnlyStamp(
     NodeNotFound,
-    container.querySelector('#node-not-found') as HTMLTemplateElement,
+    container.querySelector<HTMLTemplateElement>('#node-not-found')!,
   )
   .registerOnlyStamp(
     GetStarted,
-    container.querySelector('#get-started') as HTMLTemplateElement,
+    container.querySelector<HTMLTemplateElement>('#get-started')!,
   )
   .registerOnlyStamp(
     CharacterType,
-    container.querySelector('#character-type') as HTMLTemplateElement,
+    container.querySelector<HTMLTemplateElement>('#character-type')!,
   )
   .registerOnlyStamp(
     Empty,
-    container.querySelector('#empty') as HTMLTemplateElement,
+    container.querySelector<HTMLTemplateElement>('#empty')!,
   )
   .registerOnlyStamp(
     Weapon,
-    container.querySelector('#weapon') as HTMLTemplateElement,
+    container.querySelector<HTMLTemplateElement>('#weapon')!,
   )
   .registerOnlyStamp(
     RaceNode,
-    container.querySelector('#race') as HTMLTemplateElement,
+    container.querySelector<HTMLTemplateElement>('#race')!,
   )
 
 runStamps(container, Main, stamps)
