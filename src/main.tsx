@@ -7,11 +7,11 @@ import { Router } from './router'
 // Uncomment in debug builds for logging tools
 // create()
 
-function PageNotFound() {
+export function PageNotFound() {
   return <p>Page not found</p>
 }
 
-function Main() {
+export function Main() {
   const router = new Router()
 
   const pageComponent = router.component.pipe(
@@ -34,6 +34,3 @@ function Main() {
     </>
   )
 }
-
-const container = document.getElementById('container')!
-run(container, Main)
