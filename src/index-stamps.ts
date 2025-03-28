@@ -5,7 +5,6 @@ import HomePage from './pages/home.js'
 import AboutPage from './pages/about.js'
 import GamePage, {
   CharacterType,
-  Empty,
   GetStarted,
   NodeNotFound,
   Weapon,
@@ -48,10 +47,6 @@ stamps
   .registerOnlyStamp(
     CharacterType,
     container.querySelector<HTMLTemplateElement>('#character-type')!,
-  )
-  .registerOnlyStamp(
-    Empty,
-    container.querySelector<HTMLTemplateElement>('#empty')!,
   )
   .registerOnlyStamp(
     Weapon,

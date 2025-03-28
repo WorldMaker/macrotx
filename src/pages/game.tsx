@@ -1,4 +1,10 @@
-import { ComponentContext, Fragment, ObservableEvent, jsx } from 'butterfloat'
+import {
+  ComponentContext,
+  Empty,
+  Fragment,
+  ObservableEvent,
+  jsx,
+} from 'butterfloat'
 import { map } from 'rxjs'
 import { tag } from 'rxjs-spy/operators'
 import { GameProps, GameVm } from '../models/gamevm'
@@ -20,10 +26,6 @@ export function CharacterType({ game }: GameProps) {
       <span bind={{ innerText: game.className }}></span>.
     </p>
   )
-}
-
-export function Empty() {
-  return <></>
 }
 
 export function Weapon({ game }: GameProps) {
