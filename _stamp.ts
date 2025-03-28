@@ -12,7 +12,6 @@ import HomePage from './src/pages/home.js'
 import AboutPage from './src/pages/about.js'
 import GamePage, {
   CharacterType,
-  Empty,
   GetStarted,
   NodeNotFound,
   Weapon,
@@ -82,10 +81,6 @@ const game = new GameVm()
 const characterTypeStamp = buildStamp(CharacterType({ game }), document)
 characterTypeStamp.id = 'character-type'
 container.append(characterTypeStamp)
-
-const emptyStamp = buildStamp(Empty(), document)
-emptyStamp.id = 'empty'
-container.append(emptyStamp)
 
 const weaponStamp = buildStamp(Weapon({ game }), document)
 weaponStamp.id = 'weapon'

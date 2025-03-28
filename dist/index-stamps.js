@@ -2530,7 +2530,24 @@ function Static({ element }) {
     element
   };
 }
+function Comment({ comment }) {
+  return {
+    type: "comment",
+    comment
+  };
+}
+function Empty() {
+  return {
+    type: "empty"
+  };
+}
 function jsx(element, attributes, ...children) {
+  children = children.flat().map((child) => {
+    if (typeof child === "number") {
+      return child.toLocaleString();
+    }
+    return child;
+  });
   if (typeof element === "string") {
     const { bind: bind2, immediateBind, childrenBind, childrenBindMode, events, styleBind, immediateStyleBind, classBind, immediateClassBind, ...otherAttributes } = attributes ?? {};
     return {
@@ -2550,7 +2567,7 @@ function jsx(element, attributes, ...children) {
     };
   }
   if (typeof element === "function") {
-    if (element === Fragment || element === Children || element === Static) {
+    if (element === Fragment || element === Children || element === Static || element === Empty || element === Comment) {
       const func = element;
       return func(attributes ?? {}, ...children);
     }
@@ -2566,8 +2583,6 @@ function jsx(element, attributes, ...children) {
   }
   throw new Error(`Unsupported jsx in ${element}`);
 }
-/* @__PURE__ */ (function(jsx2) {
-})(jsx || (jsx = {}));
 
 // node_modules/butterfloat/binding.js
 function bindObjectKey(item, key, observable2, error, complete) {
@@ -2815,6 +2830,9 @@ function wireSuspense(description, context2, document2 = globalThis.document) {
 
 // node_modules/butterfloat/wiring.js
 var contextChildrenDescriptions = /* @__PURE__ */ new WeakMap();
+function isCommentNode(node) {
+  return node.nodeType === node.COMMENT_NODE;
+}
 function wireInternal(description, subscriber, context2, outerContainer, document2 = globalThis.document) {
   const { treeError } = context2;
   const subscription = new Subscription();
@@ -2870,6 +2888,14 @@ function wireInternal(description, subscriber, context2, outerContainer, documen
       subscriber.next(container2);
     } else {
       subscriber.next(document2.createComment("prestamp bound"));
+    }
+    if (isCommentNode(container2)) {
+      if (elementBinds.length > 0 || nodeBinds.length > 0) {
+        console.warn(`Trying to bind to an empty component named ${componentName}`);
+      }
+      return () => {
+        subscription.unsubscribe();
+      };
     }
     const bindContext = {
       ...context2,
@@ -2965,16 +2991,19 @@ function wire(component, context2, outerContainer, document2 = globalThis.docume
   return new Observable((subscriber) => wireInternal(description, subscriber, context2, outerContainer, document2));
 }
 function runInternal(container2, component, context2, placeholder, document2 = globalThis.document) {
-  const observable2 = isObservable(component) ? component : wire(component, context2, container2, document2);
+  const isObservableComponent = isObservable(component);
+  const observable2 = isObservableComponent ? component : wire(component, context2, container2, document2);
   let previousNode = null;
   const componentName = "type" in component ? component.component.name : component.name;
   return observable2.subscribe({
     next(node) {
-      if (previousNode) {
+      if (isObservableComponent) {
+        container2.replaceChildren(node);
+      } else if (previousNode) {
         try {
           previousNode.replaceWith(node);
         } catch (error) {
-          console.warn("Cannot exactly replace previous node, replacing all children in container", previousNode);
+          console.warn(`Cannot exactly replace previous node in ${componentName}, replacing all children in container`, node, previousNode);
           container2.replaceChildren(node);
         }
       } else if (placeholder) {
@@ -2989,7 +3018,7 @@ function runInternal(container2, component, context2, placeholder, document2 = g
     },
     complete() {
       if (!context2?.preserveOnComplete && previousNode) {
-        container2.removeChild(previousNode);
+        previousNode.remove();
       }
     }
   });
@@ -3112,54 +3141,56 @@ function selectBindings(container2, description) {
 }
 
 // node_modules/butterfloat/static-dom.js
-function buildElement(description, nsContext, document2 = globalThis.document) {
+function buildElement(description, context2, document2 = globalThis.document) {
   if (description.attributes.xmlns) {
-    nsContext = {
+    context2 = {
       defaultNamespace: description.attributes.xmlns,
-      namespaceMap: { ...nsContext?.namespaceMap }
+      namespaceMap: { ...context2?.namespaceMap }
     };
   }
   let element;
   if (description.element.includes(":")) {
     const [nsAbbrev, elementName] = description.element.split(":");
-    let ns = nsContext?.namespaceMap[nsAbbrev];
+    let ns = context2?.namespaceMap[nsAbbrev];
     if (!ns) {
       for (const [key, value] of Object.entries(description.attributes)) {
         if (key.startsWith("xmlns:")) {
           const nsAbbrev2 = key.replace("xmlns:", "");
-          nsContext = {
-            defaultNamespace: nsContext?.defaultNamespace ?? null,
+          context2 = {
+            ...context2,
+            defaultNamespace: context2?.defaultNamespace ?? null,
             namespaceMap: {
-              ...nsContext?.namespaceMap,
+              ...context2?.namespaceMap,
               [nsAbbrev2]: value
             }
           };
         }
       }
-      ns = nsContext?.namespaceMap[nsAbbrev];
+      ns = context2?.namespaceMap[nsAbbrev];
       if (!ns) {
         throw new Error(`Unknown namespace for '${description.element}'`);
       }
     }
     element = document2.createElementNS(ns, elementName);
-  } else if (nsContext?.defaultNamespace) {
-    element = document2.createElementNS(nsContext.defaultNamespace, description.element);
+  } else if (context2?.defaultNamespace) {
+    element = document2.createElementNS(context2.defaultNamespace, description.element);
   } else {
     element = document2.createElement(description.element);
   }
   for (const [key, value] of Object.entries(description.attributes)) {
     if (key.startsWith("xmlns:")) {
       const nsAbbrev = key.replace("xmlns:", "");
-      nsContext = {
-        defaultNamespace: nsContext?.defaultNamespace ?? null,
+      context2 = {
+        ...context2,
+        defaultNamespace: context2?.defaultNamespace ?? null,
         namespaceMap: {
-          ...nsContext?.namespaceMap,
+          ...context2?.namespaceMap,
           [nsAbbrev]: value
         }
       };
     } else if (key.includes(":")) {
       const [nsAbbrev, attributeName] = key.split(":");
-      const ns = nsContext?.namespaceMap?.[nsAbbrev];
+      const ns = context2?.namespaceMap?.[nsAbbrev];
       if (!ns) {
         throw new Error(`Unknown namespace for '${key}' attribute`);
       }
@@ -3176,17 +3207,17 @@ function buildElement(description, nsContext, document2 = globalThis.document) {
       element[key] = value;
     }
   }
-  return { element, nsContext };
+  return { element, context: context2 };
 }
-function buildNode(description, container2, elementBinds, nodeBinds, nsContext, document2 = globalThis.document) {
+function buildNode(description, container2, elementBinds, nodeBinds, context2, document2 = globalThis.document) {
   switch (description.type) {
     case "element": {
-      const { element, nsContext: newContext } = buildElement(description, nsContext, document2);
+      const { element, context: newContext } = buildElement(description, context2, document2);
       if (hasAnyBinds(description)) {
         elementBinds.push([element, description]);
       }
       container2.appendChild(element);
-      return { container: element, nsContext: newContext };
+      return { container: element, context: newContext };
     }
     case "children": {
       const childrenComment = document2.createComment("Children component");
@@ -3211,23 +3242,34 @@ function buildNode(description, container2, elementBinds, nodeBinds, nsContext, 
           container2.appendChild(document2.createTextNode(child));
           continue;
         }
-        buildTree(child, container2, elementBinds, nodeBinds, nsContext, document2);
+        buildTree(child, container2, elementBinds, nodeBinds, context2, document2);
       }
       if (description.childrenBind && description.childrenBindMode !== "prepend") {
         const fragmentComment = document2.createComment("fragment children binding");
         container2.appendChild(fragmentComment);
         nodeBinds.push([fragmentComment, description]);
       }
-      return { container: container2, nsContext };
+      return { container: container2, context: context2 };
     case "static":
       container2.appendChild(description.element);
-      return { container: container2, nsContext };
+      return { container: container2, context: context2 };
+    case "empty":
+      if (!context2?.skipEmpty) {
+        const emptyComment = document2.createComment("empty");
+        container2.appendChild(emptyComment);
+      }
+      return { container: container2, context: context2 };
+    case "comment": {
+      const comment = document2.createComment(description.comment);
+      container2.appendChild(comment);
+      return { container: container2, context: context2 };
+    }
   }
 }
-function buildTree(description, container2 = null, elementBinds = [], nodeBinds = [], nsContext, document2 = globalThis.document) {
+function buildTree(description, container2 = null, elementBinds = [], nodeBinds = [], context2, document2 = globalThis.document) {
   if (!container2 && description.type === "element") {
-    const { element, nsContext: newContext } = buildElement(description, nsContext, document2);
-    nsContext = newContext;
+    const { element, context: newContext } = buildElement(description, context2, document2);
+    context2 = newContext;
     container2 = element;
     if (hasAnyBinds(description)) {
       elementBinds.push([element, description]);
@@ -3238,24 +3280,31 @@ function buildTree(description, container2 = null, elementBinds = [], nodeBinds 
       nodeBinds,
       container: description.element
     };
+  } else if (!container2 && description.type === "empty" && !context2?.skipEmpty) {
+    const emptyComment = document2.createComment("empty");
+    return {
+      elementBinds,
+      nodeBinds,
+      container: emptyComment
+    };
   } else if (!container2) {
     container2 = document2.createDocumentFragment();
-    buildNode(description, container2, elementBinds, nodeBinds, nsContext, document2);
+    buildNode(description, container2, elementBinds, nodeBinds, context2, document2);
   } else {
-    const nextNode = buildNode(description, container2, elementBinds, nodeBinds, nsContext, document2);
+    const nextNode = buildNode(description, container2, elementBinds, nodeBinds, context2, document2);
     if (nextNode !== null) {
-      const { container: newContainer, nsContext: newContext } = nextNode;
+      const { container: newContainer, context: newContext } = nextNode;
       container2 = newContainer;
-      nsContext = newContext;
+      context2 = newContext;
     }
   }
-  if (description.type !== "children" && description.type !== "fragment" && description.type !== "static") {
+  if (description.type !== "children" && description.type !== "fragment" && description.type !== "static" && description.type !== "comment" && description.type !== "empty") {
     for (const child of description.children) {
       if (typeof child === "string") {
         container2.appendChild(document2.createTextNode(child));
         continue;
       }
-      buildTree(child, container2, elementBinds, nodeBinds, nsContext, document2);
+      buildTree(child, container2, elementBinds, nodeBinds, context2, document2);
     }
   }
   return {
@@ -3581,9 +3630,6 @@ function AfterPronoun({ pronounVm }, { bindImmediateEffect, events }) {
 }
 
 // src/nodes/weapon.tsx
-function Empty() {
-  return /* @__PURE__ */ jsx(Fragment, null);
-}
 function WeaponNode({ game }, { bindEffect, events }) {
   const { playerNameChanged } = events;
   const { weaponVm } = game;
@@ -3694,15 +3740,12 @@ function TeaChoice({ bossVm }, { bindImmediateEffect, events }) {
   });
   return /* @__PURE__ */ jsx("div", { className: "list-group" }, /* @__PURE__ */ jsx("div", { className: "list-group-item disabled" }, /* @__PURE__ */ jsx("h4", { className: "list-group-item-heading" }, "Fight!", " ", /* @__PURE__ */ jsx("span", { className: "label label-primary" }, "6000 ", /* @__PURE__ */ jsx("span", { className: "fa fa-btc" }))), /* @__PURE__ */ jsx("p", { className: "list-group-item-text" }, "This would clearly be an amazing boss battle full of trying to find a weak point, exploiting said weak point, and then repeating those steps at least two more times.")), /* @__PURE__ */ jsx("a", { className: "list-group-item", href: "#", events: { click: nextTea } }, /* @__PURE__ */ jsx("h4", { className: "list-group-item-heading" }, "Invite to Tea"), /* @__PURE__ */ jsx("p", { className: "list-group-item-text" }, "It may not be your office, but there's no reason to be uncivil even to an uninvited guest.")));
 }
-function Empty2() {
-  return /* @__PURE__ */ jsx(Fragment, null);
-}
 function ChefTea() {
   return /* @__PURE__ */ jsx(Fragment, null, "You manage to collect a couple biscotti from an emergency chef pouch and even work a small number of spaceberries into an impromptu spaceberry jam.");
 }
 function AfterTea({ game }) {
   const chefTea = game.className.pipe(
-    map((className) => className === "Chef" ? ChefTea : Empty2)
+    map((className) => className === "Chef" ? ChefTea : Empty)
   );
   const rechargeDate = 23 * 60 * 6e4;
   const recharge = interval(
@@ -4028,9 +4071,6 @@ function GetStarted() {
 function CharacterType({ game }) {
   return /* @__PURE__ */ jsx("p", null, "You are ", /* @__PURE__ */ jsx("span", { bind: { innerText: game.a } }), " ", /* @__PURE__ */ jsx("span", { bind: { innerText: game.gender } }), " ", /* @__PURE__ */ jsx("span", { bind: { innerText: game.race } }), " ", /* @__PURE__ */ jsx("span", { bind: { innerText: game.className } }), ".");
 }
-function Empty3() {
-  return /* @__PURE__ */ jsx(Fragment, null);
-}
 function Weapon({ game }) {
   return /* @__PURE__ */ jsx("p", null, "You are wielding your ", /* @__PURE__ */ jsx("span", { bind: { innerText: game.weapon } }), ".");
 }
@@ -4048,7 +4088,7 @@ function GamePage(_props, { bindEffect, events }) {
   const ap = game.ap.pipe(map((ap2) => ap2.toLocaleString()));
   const weapon = game.weapon.pipe(
     map(
-      (weapon2) => !weapon2 || weapon2 === "" ? Empty3 : () => /* @__PURE__ */ jsx(Weapon, { game })
+      (weapon2) => !weapon2 || weapon2 === "" ? Empty : () => /* @__PURE__ */ jsx(Weapon, { game })
     )
   );
   bindEffect(events.restart, () => {
@@ -4158,9 +4198,6 @@ stamps.registerPrestamp(Main, container).registerOnlyStamp(
 ).registerOnlyStamp(
   CharacterType,
   container.querySelector("#character-type")
-).registerOnlyStamp(
-  Empty3,
-  container.querySelector("#empty")
 ).registerOnlyStamp(
   Weapon,
   container.querySelector("#weapon")

@@ -1,11 +1,13 @@
-import { ComponentContext, Fragment, ObservableEvent, jsx } from 'butterfloat'
+import {
+  ComponentContext,
+  Empty,
+  Fragment,
+  ObservableEvent,
+  jsx,
+} from 'butterfloat'
 import { GameProps } from '../models/gamevm'
 import { WeaponVm } from '../models/weaponvm'
 import { map } from 'rxjs'
-
-function Empty() {
-  return <></>
-}
 
 interface WeaponEvents {
   playerNameChanged: ObservableEvent<InputEvent>

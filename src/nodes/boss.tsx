@@ -1,4 +1,10 @@
-import { ComponentContext, Fragment, ObservableEvent, jsx } from 'butterfloat'
+import {
+  ComponentContext,
+  Empty,
+  Fragment,
+  ObservableEvent,
+  jsx,
+} from 'butterfloat'
 import { interval, map } from 'rxjs'
 import { BossVm } from '../models/bossvm'
 import { GameProps } from '../models/gamevm'
@@ -88,10 +94,6 @@ function TeaChoice(
       </a>
     </div>
   )
-}
-
-function Empty() {
-  return <></>
 }
 
 function ChefTea() {
